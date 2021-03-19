@@ -1,0 +1,49 @@
+启动mysql服务
+net start mysql
+#创建 guest 项目
+django-admin startproject guest 
+guest>python manage.py startapp sign #创建 sign应用
+启动服务
+python manage.py runserver
+执行数据库迁移
+python manage.py migrate
+python manage.py makemigrations api
+创建超级管理员
+python manage.py createsuperuser
+用户信息：admin   admin123456
+创建表
+python manage.py makemigrations sign
+python manage.py migrate
+基本数据访问
+python3 manage.py shell
+from sign.models import Event, Guest
+#方式1（插入数据）
+e1 = Event(id=2,name='红米 Pro 发布会',limit=2000,status=True,address='北京水立方',start_time=datetime(2016,8,10,14,0,0))
+e1.save()
+#方式2（插入数据）
+Guest.objects.create(realname='andy',phone=13611001101,email='andy@mail.com',sign=False,event_id=3)
+#方式1（查询数据）
+e1 = Event.objects.get(name='红米 MAX 发布会')
+e1.address
+#方式2（查询数据）
+Event.objects.get(name='红米 MAX 发布会').status
+#返回对象列表
+e2 = Event.objects.filter(name__contains='发布会')
+e2
+#删除数据
+g2 = Guest.objects.get(phone='13611001101')
+g2.delete()
+Guest.objects.get(phone='13611001101').delete()
+#更新数据
+g3=Guest.objects.get(phone='13611001101')
+g3.realname='andy2'
+g3.save()
+Guest.objects.select_for_update().filter(phone='13611001101').update(realname='andy')
+#执行测试
+python manage.py test
+python manage.py test sign
+python manage.py test sign.tests
+python manage.py test sign.tests.ModelTest
+python manage.py test sign.tests.ModelTest.test_event_models
+
+1、Beautiful is better than ugly.（美丽优于丑陋） 2、Explicit is better than implicit.（清楚优于含糊） 3、Simple is better than complex.（简单优于复杂） 4、Complex is better than complicated.（复杂优于繁琐） 5、Readability counts.（重要的是可读性）
